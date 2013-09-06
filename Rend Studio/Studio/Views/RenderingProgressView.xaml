@@ -1,0 +1,32 @@
+﻿<src:WpfWindow x:Class="Studio.Views.RenderingProgressView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:src="clr-namespace:WpfShell.Controls;assembly=WpfShell"
+        xmlns:util="clr-namespace:Studio.ViewModels.Utils"
+        Height="160" Width="250" Style="{StaticResource WpfWindowStyle}" ResizeMode="CanMinimize" Title="Rendering progress" WindowStartupLocation="CenterScreen">
+    <src:WpfWindow.Resources>
+        <util:RenderingProgressToImageSourceConverter x:Key="imageUrlConverter" />
+        <util:RenderingProgressToAnimationConverter x:Key="imageAnimationConverter" />
+    </src:WpfWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding LoadingScriptingEngineState, Converter={StaticResource imageUrlConverter}}" Height="24" Width="24" RenderTransform="{Binding LoadingScriptingEngineState, Converter={StaticResource imageAnimationConverter}}" />
+                <TextBlock VerticalAlignment="Center">Loading scripting engine</TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding CreatingSceneState, Converter={StaticResource imageUrlConverter}}" Height="24" Width="24" RenderTransform="{Binding CreatingSceneState, Converter={StaticResource imageAnimationConverter}}" />
+                <TextBlock VerticalAlignment="Center">Creating scene</TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding TracingRaysState, Converter={StaticResource imageUrlConverter}}" Height="24" Width="24" RenderTransform="{Binding TracingRaysState, Converter={StaticResource imageAnimationConverter}}" />
+                <TextBlock VerticalAlignment="Center">Tracing rays</TextBlock>
+            </StackPanel>
+        </StackPanel>
+        <ProgressBar VerticalAlignment="Bottom" Grid.Row="1" Margin="10" Value="{Binding Progress}" Height="12" />
+    </Grid>
+</src:WpfWindow>

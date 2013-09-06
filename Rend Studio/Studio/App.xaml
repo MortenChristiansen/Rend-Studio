@@ -1,0 +1,24 @@
+﻿<Application x:Class="Studio.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Studio">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <local:AppBootstrapper x:Key="bootstrapper" />
+                </ResourceDictionary>
+                <ResourceDictionary Source="/WpfShell;component/Resources/BaseStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/ScrollBarStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/ToolBarStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/TabControlStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/ProgressBarStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/ContextMenuStyles.xaml"/>
+                <ResourceDictionary Source="/WpfShell;component/Resources/TreeViewStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/FilmStripStyles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Shared.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

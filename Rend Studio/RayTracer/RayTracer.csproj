@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C9D2DC7B-F8EC-44FC-B555-C48E7DF3ACCE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RayTracer</RootNamespace>
+    <AssemblyName>RayTracer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="IronPython">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.SQLite">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\IronPython.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Wpf">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\IronPython.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.AspNet">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata">
+      <HintPath>..\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Splicer">
+      <HintPath>..\Libs\Splicer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation\CameraAnimation.cs" />
+    <Compile Include="Animation\FrameSequence.cs" />
+    <Compile Include="Animation\IAnimation.cs" />
+    <Compile Include="Animation\PrimitiveAnimation.cs" />
+    <Compile Include="Animation\Storyboard.cs" />
+    <Compile Include="Engine.Screen\Camera.cs" />
+    <Compile Include="Engine.Screen\RenderConfiguration.cs" />
+    <Compile Include="Engine\RenderUnit.cs" />
+    <Compile Include="Engine\ScriptingSystem.cs" />
+    <Compile Include="Geometry.Coloring\Color.cs" />
+    <Compile Include="Geometry.Coloring\Material.cs" />
+    <Compile Include="Geometry.Lighting\AmbientLight.cs" />
+    <Compile Include="Geometry.Lighting\AreaLight.cs" />
+    <Compile Include="Geometry.Lighting\BoxAreaLight.cs" />
+    <Compile Include="Geometry.Lighting\PositionedLight.cs" />
+    <Compile Include="Geometry.Lighting\SphereAreaLight.cs" />
+    <Compile Include="Geometry.Models\Face.cs" />
+    <Compile Include="Geometry.Models\Mesh.cs" />
+    <Compile Include="Geometry.Models\Model.cs" />
+    <Compile Include="Geometry.Models\ModelBuilder.cs" />
+    <Compile Include="Geometry.Models\StreamParser.cs" />
+    <Compile Include="Geometry.Primitives\Isosurface.cs" />
+    <Compile Include="Geometry\BoundingBox.cs" />
+    <Compile Include="Geometry.Primitives\Box.cs" />
+    <Compile Include="Geometry.Primitives\Cylinder.cs" />
+    <Compile Include="Geometry\BSpline.cs" />
+    <Compile Include="Geometry\IPath.cs" />
+    <Compile Include="Geometry\LinearInterpolation.cs" />
+    <Compile Include="Geometry\RayHit.cs" />
+    <Compile Include="Geometry\RayPackage.cs" />
+    <Compile Include="Geometry.Primitives\Plane.cs" />
+    <Compile Include="Geometry.Lighting\PointLight.cs" />
+    <Compile Include="Geometry.Primitives\Primitive.cs" />
+    <Compile Include="Geometry.Primitives\Sphere.cs" />
+    <Compile Include="Geometry.Primitives\Triangle.cs" />
+    <Compile Include="Mathematics\Coordinate.cs" />
+    <Compile Include="Mathematics\FloatExtensions.cs" />
+    <Compile Include="Mathematics\Matrix.cs" />
+    <Compile Include="Mathematics\MersenneTwister.cs" />
+    <Compile Include="Mathematics\Quaternion2.cs" />
+    <Compile Include="Mathematics\ValueAggregator.cs" />
+    <Compile Include="Mathematics\Vector.cs" />
+    <Compile Include="Plugins.Models\IModelLoader.cs" />
+    <Compile Include="Plugins.Models\Loader_3ds.cs" />
+    <Compile Include="Plugins.Models\ObjLoader.cs" />
+    <Compile Include="Plugins.Models\PlyLoader.cs" />
+    <Compile Include="Plugins.Models\XFileLoader.cs" />
+    <Compile Include="Plugins.Shaders\DiffuseColorShader.cs" />
+    <Compile Include="Plugins.Shaders\GlossyReflectionShader.cs" />
+    <Compile Include="Plugins.Shaders\ILightShader.cs" />
+    <Compile Include="Plugins.Shaders\IRecurseShader.cs" />
+    <Compile Include="Plugins.Shaders\ReflectionColorShader.cs" />
+    <Compile Include="Plugins.Shaders\RefractionColorShader.cs" />
+    <Compile Include="Plugins.Shaders\SpecularColorShader.cs" />
+    <Compile Include="Plugins.SpatialStructures\ISpatialStructure.cs" />
+    <Compile Include="Plugins.SpatialStructures\KdTree.cs" />
+    <Compile Include="Plugins.SpatialStructures\KdTreeV2.cs" />
+    <Compile Include="Plugins.SpatialStructures\MemoryManager.cs" />
+    <Compile Include="Plugins.SpatialStructures\Node.cs" />
+    <Compile Include="Plugins.Tracers\HardShadowTracer.cs" />
+    <Compile Include="Plugins.Tracers\IShadowTracer.cs" />
+    <Compile Include="Plugins.Tracers\SoftShadowTracer.cs" />
+    <Compile Include="Plugins\AntiAliasingSamplerX2.cs" />
+    <Compile Include="Plugins\AntiAliasingSamplerX3.cs" />
+    <Compile Include="Plugins\AntiAliasingSamplerX4.cs" />
+    <Compile Include="Plugins\AntiAliasingSamplerX8.cs" />
+    <Compile Include="Plugins\BilinearTextureFilter.cs" />
+    <Compile Include="Plugins\IPixelRenderer.cs" />
+    <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\ISuperSampler.cs" />
+    <Compile Include="Plugins\ITextureFilter.cs" />
+    <Compile Include="PostProcessing\BitmapFilter.cs" />
+    <Compile Include="PostProcessing\ColorSpace.cs" />
+    <Compile Include="PostProcessing\GaussianBlur.cs" />
+    <Compile Include="PostProcessing\RawBitmap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Geometry\Ray.cs" />
+    <Compile Include="Engine.Screen\Frame.cs" />
+    <Compile Include="Engine\RenderEngine.cs" />
+    <Compile Include="Engine.Screen\Scene.cs" />
+    <Compile Include="Geometry.Coloring\Texture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="csmatio.dll" />
+    <Content Include="dnAnalytics.dll" />
+    <Content Include="zlib.net.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Studio.Core\Studio.Core.csproj">
+      <Project>{69610625-6a38-4b3e-83cd-a2c64592afce}</Project>
+      <Name>Studio.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

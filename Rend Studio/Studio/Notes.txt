@@ -1,0 +1,271 @@
+﻿-There could be a little toggle button in the lower right corner of the script file. It should allow you to switch between
+code and image mode. In image mode, the selected image would be shown in full size. Selecting the movie band and using the
+arrow keys, it would be very quick to browse them. Later, you could add separate options to the right, depending on the mode.
+This could be options for deleting, seeing stats, exporting to library or elsewhere, adjusting images, applying post effects,
+etc. Maybe the movie band should only be visible in this mode. It depends what exactly we want to do with it (fx. the thing
+about saving the code for each image, this would talk againts hiding it).
+-We can make some sort of UI that allows easily manipulating vectors ands such. For example, when hovering over a Vector
+instantiation in the script window (or by right clicking), we can show options for rotating it or doing other transformations.
+Alternatively, it could be implemented such that if you ctrl-click an object instantiation and the object type is recognized,
+a special editor appears with different transformation options.
+-Switch to a struct-based ray. Measure difference. Commit first.
+-Add the eye icon to dialogs and other windows. While it might not appear on the window itself, a plcaholder icon appears
+when hovering app in the task bar.
+
+Maybe the root view model should have the close/canclose logic and the other view models should be proper children, 
+for automatic evaluation.
+
+Assets is the general term for the different types of things that we keep track of, such as script files, rendered images
+and such. Each type of asset has an associated viewer (or perhaps only some, while others map to other control types?) 
+that will show its content in the asset presenter (a tab control with a column for settings, metadata, etc.). A project 
+would be described as a tree of assets, where the root is the project itself.
+
+Project
+	-Productions
+		-Scenes
+			-Script
+				-Camera
+				-Lights
+			-Renderings
+		-Materials*
+		-3D models*
+		-Videos
+		-Textures*
+
+*: Can come from central library
+
+UI to update:
+-Dialogs, specifically the one that appears when you try to close the app with unsaved data.
+-Tooltips.
+-Tree viewer.
+-Icon in tab item header.
+
+I should make it possible to refer to resources such as textures and materials that exist in the asset library
+from within the script. Perhaps they should be loaded into a bunch of objects or they should be accessible from
+a loader class. Examples: 
+	texture = AssetLoader.LoadTexture("/planets/mars")
+	steelMat = AssetLoader.LoadMaterial("/metals/steel")
+Here, we use a namespacing mechanism (folder hierarchy?) to find the resources. It could also be like this:
+	texture = AssetLoader.Load<Texture>("/textures/planets/mars")
+	steelMat = AssetLoader.Load<Material>("/materials/metals/steel")
+This is more verbose but also more flexible. Allows accessing more specialized versions without casting them:
+	modelA = AssetLoader.Load<Model>("/models/tanks/sherman")
+	modelB = AssetLoader.Load<AnimateableModel>("/models/animation/tanks/panther")
+
+Use DirectWrite (here or in WpfShell library)
+	http://blogs.msdn.com/b/text/archive/2009/04/13/directwrite-questions-and-answers.aspx
+
+After updating the UI:
+-Make the Close command trigger the "Can close" logic.
+-Make the Close Tab command work and trigger the "Can close" logic.
+-Approaches for hooking up key bindings:
+	http://www.felicepollano.com/2011/05/02/InputBindingKeyBindingWithCaliburnMicro.aspx
+	http://caliburnmicro.codeplex.com/discussions/243905
+
+-Here is perhaps a hint for hooking up with routed commands: 
+	http://stackoverflow.com/questions/8988705/dynamic-menus-with-caliburn-micro
+	-Another solution would be to register a handler for all the registered events in the main window.
+	 Then, it should route them all throught the caliburn event system. Isn't there some sort of IHandle<TEvent>
+	 interface? We could use reflection to find all the types of of commands in the assembly plus the known
+	 classes with commands in .NET. It needs to translate the CanExecute information back again. Problem: we don't
+	 have a codebehind file to do it in.
+
+-Application icon source: http://www.iconarchive.com/show/oxygen-icons-by-oxygen-icons.org/Actions-layer-visible-off-icon.html
+-Splash screen icon candidates: 
+	http://www.smashingmagazine.com/2012/06/18/freebie-academic-icon-set-10-png-psd-icons/
+	http://www.freeiconsweb.com/Free-Downloads.asp?id=1318
+	http://www.freeiconsweb.com/Free-Downloads.asp?id=1319
+-Misc icons:
+	http://www.freeiconsweb.com/Free-Downloads.asp?id=695
+	http://www.freeiconsweb.com/Free-Downloads.asp?id=1453
+	http://www.freeiconsweb.com/Free-Downloads.asp?id=1348
+
+-Angled bands of color in rectangle (for loading bar):
+	http://channel9.msdn.com/coding4fun/articles/Building-a-WPF-Sudoku-Game-Part-5-The-AI-Battle-Loading-and-Comparing-AI-Plug-ins
+
+Note: We should not serialize view models, only models. Models represent the core logic of the app, and often there will be 
+a matching view model and view for a model. Example: Rendering, RenderingViewModel and RenderingView.
+
+We should handle if the user opens a file that is already open, by just focusing it. What about opening a file that is
+similarly named as an existing one?
+
+
+I could add support for the asset library to be stored in the cloud (SkyDrive API). Could also save all generated media there.
+Support Open SkyDrive Project dialog.
+
+
+At the bottom of each script view is a line with thumbnails of all the renderings made from the script. When clicking
+a thumbnail it sets the script to the state that it was in when the rendering was made. Thus, starting the rendering would
+recreate the same image. The purpose is that you can go back and refine your work. You can always go back to the script
+you were working on before switching.
+
+Each time you render the scene, the state is saved and you begin a new working set. If you go back and begin to work from
+within the timeline, you can create a new working branch. I'm not sure how best to visualize this but it might be good to allow
+detaching a branch into its own scene. One way would be to split the list horizontally from that point on (resulting in thumbnails
+of half the size). For this to make sense, you would at least need to be able to adjust the height of the thumbnail list by
+dragging on the separator line.
+
+
+For some reason, the Box primitive messes up the number of traces (actual or reported). This only happens in release mode, if the 
+debugger has not been attached at any point. Can this actually be a bug in Visual Studio? It could also be a result of the combined
+box and material, though other triangles had the same material. The material was Material(0.1, 10.0, 0.2, 1.0, 0.0, Color(150, 87, 48)).
+
+
+Similar to the sudoku example mentioned above, I can create a view where the time spent inside each plugin is calculated. I don't
+know if measuring this will have a performance impact and how to handle the inclusiveness of nested tasks. However, it would be
+cool to have a graphical way to view the perforance impact of each effect. A status report can also be shown after rendering for
+each step in the process. It would then list the time spent on setting up the spatial structure, tracing rays and post processing.
+
+
+Using the Window Key+Right or Left should not have the invisible border enabled.
+
+
+A non-trivial amount of CPU power can be wasted when some threads complete before others, as they have no means to perform work
+stealing.
+
+
+There should be an option under a menu item called Scene where you can discard all the renderings. It should prompt the user to
+confirm. When you have a rendering selected and press delete, it should delete the rendering (again prompting the user to confirm).
+Should we make the film strip allow multiselection and then make it possible to delete a range of images this way?
+
+
+Idea for glowing lights (requires ray casting). When casting a ray from a light source you get a distance to the nearest target.
+Based on some variable, there is small a chance that the ray gets deflected a random direction. The chance is multiplied with the
+distance to determine if and where the deflection occurs. This should probably be a global effect. Look up how light works to
+find out if we can simulate the spikes/stars that appear to be visible around sharp light sources (instead of a more even glow).
+
+
+It might be useful to export a spatial structure to a file if you wan to render the same heavy scene often. It should become an
+asset in the project and it should appear in a dropdown when rendering (it then ignores the scene contents).
+
+
+Perhaps I can use Roslyn to compile an optimized rendering assembly based on the selected user options.
+
+
+Add shortcuts for changing between code and renderings mode. Perhaps use a RoutedCommand.
+
+Design:
+
+-ScriptViewModel
+	-IEnumerable<RenderingThumbnailViewModel>
+
+
+Add a nice splash screen with the 256x256 icon. I think the photoSuru project has a splash screen, so that might help. Loading:
+	-Iron Python.
+	-Roslyn.
+	-General app startup.
+	-Whatever takes so long for the first time I press New Script.
+	-The asset library/project files/other file related thing.
+
+Performance:
+	-Ray struct
+	-Much time spent in garbage collector
+	-Replace all usage of Math.Max and Math.Min with custom implementation using if and >/<.
+
+Code editor resources:
+http://stackoverflow.com/questions/394751/anyone-know-a-code-editor-i-can-embed-in-a-wpf-window-or-windows-forms
+http://stackoverflow.com/questions/8577627/scintillanet-vs-avalonedit-for-providing-scripting-interface-for-a-wpf-applicati
+http://jonsblogat.blogspot.dk/2011/06/adding-scripting-support-to-wpf.html
+http://blog.thomaslebrun.net/category/avalonedit/#.UCVjTJ0gfis - Methods for handling tooltips, autocomplete etc.
+
+Performance resources:
+http://blogs.microsoft.co.il/blogs/sasha/archive/2012/05/24/performance-gains-with-data-parallelism-using-simd-instructions-from-c.aspx
+http://www.mathdotnet.com/
+	-Faster random values
+	-SIMD matrix operations
+
+Adding file type associations:
+http://mel-green.com/2009/04/c-set-file-type-association/
+http://stackoverflow.com/questions/10892433/open-file-with-association
+
+
+The Big Picture - Development Steps:
+-Creating the project model.
+	-Style treeview control and put a project browser in the right side of the app.
+	-When saving a file, you don't specify a location on disk. Instead, you create files as you do in VS.
+	-Create a project file type that the app can open and that populates the project tree.
+	-Open files that were open last time??
+	-Add projects to jumplist.
+	-Create an action for creating new projects.
+	-Project menu item will probably be needed.
+	-Child assets should be serialized with a relative path.
+	-Add application icon. [Check]
+	-Add asset icon to tabs.
+	-Menu action for importing 3D models and textures into the project.
+	-Add a Close button to the project pane somewhere (next to project title?).
+	-Add a Delete Scene option in context menu, which should prompt to delete renderings as well.
+	-Polish
+		-Activating a scene prom the projects list should give the code editor focus.
+		-Adding a scene and overwriting another scene from the project should replace the tab.
+		-Adding a scene to a project should select the code mode.
+		-Adding a scene should not ask for the url, just the title. Then, it should have a relative
+		url based on the project.
+		-Make F2 a shortcut for editing the current scene in the project scenes tree. The edit mode
+		should be activated by default when adding a new scene.
+		-I'm not entirely happy about the way that the renderings folder is named. What if you rename the scene,
+		should I than have to rename the folder as well?
+		-Fix the issue that when you switch to a scene tab with renderings in the film strip, it scrolls slightly.
+-Installer
+	-Add file associations and open files with program.
+	-Create icons for each of the file types that we output. It should pobably be based on some document image
+	with the in-app asset icon in the lower right corner.
+-Rendering options.
+	-The current render option should be known as Quick Render or something (same settings as last time).
+	-Another action (F6?) should open a dialog with options for rendering.
+	-Open up for the full range of rendering options that have been implemented, including settings such as image size.
+	-Change to use structs for rays.
+	-Find a solution to the black spots issue (only on boxes?).
+	-Add cancel button to rendering progress dialog.
+	-Show info about rendered images somewhere (resolution, rendering time, etc.)
+	-Make progress bar indicate the rendering progress, since we actually have the info.
+-Create dedicated UI for managing cameras
+	-Cameras should be managed from UI in the right-hand pane.
+	-You should no longer manage cameras in code.
+	-Support auto-position cameras.
+-Resource library.
+	-Appears under the project in its own tree viewer.
+	-Has shared resources.
+	-Export selected images to the library.
+	-Specify location in options.
+-Post processing editor (take inspiration from Lightroom)
+	-Apply post processing effects and view their effect in realtime. Store original so it is reversible.
+	-Save post processing configurations so you can select them as a default option for a scene. Should still be reversible.
+	-Adjust overlight (exposure). Also allow to normalize values to the min/max color values.
+-Moving cameras with static content (precursor for videos).
+	-Allow camera settings to specify a path.
+	-Allow you to specify duration for the rendering and framerate (results in multiple images).
+	-Rendering dialog shows progress with 'X out of Y images rendered'.
+	-Allow the user to pause the rendering of an image stream. When starting the app again.
+	 it should have an option to resume from the last rendered frame.
+	-Use binary serializer to save spatial tree to disk for the pausing feature mentioned above.
+-Video support
+	-Make it possible to adjust post processing after each frame (for example to adjust exposure, simulating the eyes getting 
+	 used to the light/dark)
+
+
+Other Rend Solutions
+-G:\Programming\Projects\RayTracer\RayTracer
+	-This is the one I have ported over.
+	-Missing RawBitmap and postprocessing
+	-Missing the Ray upgrade 
+	-Missing IronPython
+	-Missing Video support
+-D:\Users\Morten Christiansen\Documents\Visual Studio 2010\Projects\Rend 2\
+	-Upgraded Ray to struct.
+	-Has RawBitmap.
+	-Has only token console application.
+-D:\Users\Morten Christiansen\Desktop\Flyttekasse April 2012\Code\Rend\RayTracer\trunk
+	-Same as G: SVN repo.
+	-Has everything the first one is missing except the ray upgrade.
+	-Has some reference problems.
+	-Has GPU effort (partial?).
+
+
+Current work: Making a control editable (F2).
+
+
+Profiler warnings and info:
+-Warning	2	DA0022: # Gen 1 Collections / # Gen 2 Collections = 2,71; There is a relatively high rate of Gen 2 garbage collections occurring. If, by design, most of your program's data structures are allocated and persisted for a long time, this is not ordinarily a problem. However, if this behavior is unintended, your app may be pinning objects. If you are not certain, you can gather .NET memory allocation data and object lifetime information to understand the pattern of memory allocation your application uses. 	C:\Users\Morten Christiansen\Documents\Visual Studio 11\Projects\Rend\Studio120818.vsp	0	0	
+-Message	3	DA0023: (Average)% Time in GC = 13,07; 
+      % Time in GC is relatively high. This indication of excessive amount of garbage collection overhead could be impacting the responsiveness of your application. You can gather .NET memory allocation data and object lifetime information to understand the pattern of memory allocation your application uses better.
+     	C:\Users\Morten Christiansen\Documents\Visual Studio 11\Projects\Rend\Studio120818.vsp	0	0	

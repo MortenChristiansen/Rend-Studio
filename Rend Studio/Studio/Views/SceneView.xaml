@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="Studio.Views.SceneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:ctr="clr-namespace:Studio.Infrastructure.Controls"
+             xmlns:cmd="clr-namespace:Studio.Infrastructure.Commands"
+             xmlns:bh="clr-namespace:Studio.Infrastructure.Behaviors"
+             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+             mc:Ignorable="d" Focusable="True"
+             d:DesignHeight="300" d:DesignWidth="300" Name="SceneRoot">
+    <UserControl.Resources>
+        <Style x:Key="ModeButtonStyleCode" TargetType="{x:Type RadioButton}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border Name="Border" CornerRadius="2,0,0,2" Opacity="0.5" BorderThickness="0,1,0,0" BorderBrush="{StaticResource BorderHighlightBrush}" Background="{StaticResource WindowBackgroundBrush}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Resources/Icons/document-text.png" Height="24" Width="24" Margin="0,0,0,1"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Trigger.Setters>
+                                    <Setter Property="Opacity" Value="1" TargetName="Border" />
+                                    <Setter Property="Background" Value="#555" TargetName="Border" />
+                                </Trigger.Setters>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ModeButtonStyleRenderings" TargetType="{x:Type RadioButton}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border Name="Border" Opacity="0.5" CornerRadius="0,2,2,0" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1,0,0,0" Background="{StaticResource WindowBackgroundBrush}">
+                            <Border BorderThickness="0,1,0,0" CornerRadius="0,2,2,0" BorderBrush="{StaticResource BorderHighlightBrush}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/Icons/images.png" Margin="0,1,0,0" Height="24" Width="24"/>
+                                </StackPanel>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Trigger.Setters>
+                                    <Setter Property="Opacity" Value="1" TargetName="Border" />
+                                    <Setter Property="Background" Value="#555" TargetName="Border" />
+                                </Trigger.Setters>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    
+    <DockPanel LastChildFill="True" Focusable="False">
+        <ctr:FilmStrip DockPanel.Dock="Bottom" x:Name="Renderings">
+            <i:Interaction.Behaviors>
+                <bh:FilmStripFocusBehavior FocusElement="{Binding ElementName=SceneRoot}"/>
+            </i:Interaction.Behaviors>
+        </ctr:FilmStrip>
+        <Border Focusable="False" BorderThickness="0,1,0,1" BorderBrush="{StaticResource BorderBrush}" DockPanel.Dock="Bottom">
+            <Border Height="4" Background="{StaticResource WindowBackgroundBrush}" BorderThickness="0,1,0,0" BorderBrush="{StaticResource BorderHighlightBrush}">
+            </Border>
+        </Border>
+        <Border Background="#222">
+            <Grid>
+                <ctr:CodeEditor AutoFocus="True" Visibility="{Binding IsScriptModeActive, Converter={StaticResource BoolToVisibility}}" FontFamily="Consolas" ShowLineNumbers="True" FontSize="10pt" Padding="4,0,0,0" Background="#222" Foreground="#d3d3d3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Code="{Binding Code, Mode=TwoWay}" SyntaxError="{Binding SyntaxError, Mode=TwoWay}"/>
+                <ScrollViewer Focusable="False" Visibility="{Binding IsScriptModeActive, Converter={StaticResource BoolToVisibility}, ConverterParameter=invert}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <ContentControl Margin="30" x:Name="CurrentRendering" Focusable="False">
+                        <ContentControl.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="20" />
+                        </ContentControl.Effect>
+                    </ContentControl>
+                </ScrollViewer>
+                <Border CornerRadius="2" BorderThickness="1" BorderBrush="#333"  Background="{StaticResource WindowBackgroundBrush}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="17">
+                    <StackPanel Orientation="Horizontal" UseLayoutRounding="True">
+                        <RadioButton Command="cmd:ScriptCommands.ShowEditor" Focusable="False" ToolTip="Code (F1)" IsChecked="{Binding IsScriptModeActive, Mode=TwoWay}" x:Name="CodeMode" GroupName="Mode" Style="{StaticResource ModeButtonStyleCode}" />
+                        <RadioButton Command="cmd:ScriptCommands.ShowRenderings" Focusable="False" ToolTip="Renderings (F2)" IsChecked="{Binding IsScriptModeActive, Mode=TwoWay, Converter={StaticResource BoolInverter}}" GroupName="Mode" Style="{StaticResource ModeButtonStyleRenderings}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </DockPanel>
+    <UserControl.CommandBindings>
+        <CommandBinding Command="cmd:ScriptCommands.ShowEditor" cmd:CommandBehaviors.Execute="ShowEditor" />
+        <CommandBinding Command="cmd:ScriptCommands.ShowRenderings" cmd:CommandBehaviors.Execute="ShowRenderings" />
+    </UserControl.CommandBindings>
+</UserControl>

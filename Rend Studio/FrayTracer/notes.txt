@@ -1,0 +1,85 @@
+﻿
+F# PowerPack and MathProvider libraries
+http://msdn.microsoft.com/en-us/library/vstudio/hh304365(v=vs.100).aspx
+
+Extreme Optimization libary
+http://www.extremeoptimization.com/QuickStart/FSharp/VectorOperations.aspx
+
+Writable bitmap
+http://stackoverflow.com/questions/4246844/using-native-pointers-in-f-with-writablebitmap
+
+F# ray tracer
+http://fsharpnews.blogspot.dk/2010/03/f-vs-unmanaged-c-for-parallel-numerics.html
+
+TODO:
+-Add lights and lighting model (isolate this model)
+-Spatial tree
+	Now:
+	-Get something working where I can see it in the output
+	-This requires the raytrace function to be updated to use the Phong shader effect, which required the Color type to be expanded with
+	the relevant functions.
+	-This should allow me to find out how the tests should look (what colors to test for)
+	-Update the other Raytracing tests to use lights and add other new tests
+
+Major milestones:
+-Video output
+-Reflection and refraction
+-Materials and textures
+-Model loader and triangle vertext normals
+-Anti aliasing
+-Shadows
+-Studio integration
+-Scripting
+-Experiment with ray casting and making the system able to switch between modes /we essentially switch the roles of cameras and lights
+-RawBitmap
+-Git
+
+Priorities:
+-Results are verifiable and if possible visualizable
+-Performance is measurable in detail
+
+
+
+Code for calculating Triangle normals (when each vertex has its own normal):
+
+        // The below is useful for models defining vertex normals for smoother surfaces
+
+        let over x y =
+            let xy = x - y
+            let xInY = project (intersection - x) xy
+            (length xInY) / (length xy)
+
+        let overInv x y =
+            let xy = x - y
+            let xInY = project (intersection - x) xy
+            let yInX = xy - xInY
+            (length yInX) / (length xy)
+
+        match singleNormal with
+        | true -> normal
+        | false ->
+            let aOverB = over a b
+            let cOverA = over c a
+            let bOverC = overInv b c
+            let lerp1 = lerp normalA normalB aOverB
+            let lerp2 = lerp normalC normalA cOverA
+            let lerp3 = lerp normalC normalB bOverC
+            normalize (lerp1 + lerp2 + lerp3)
+
+
+
+
+A functional way to structure the tracing algorithm would be to create a sequence of colors
+
+step 1					Step 2					Step 3					...
+
+Direct hits with		Secondary hits with		Tertiary hits with		...
+tracable lights			tracable lights			tracable lights
+
+It must carry forward both the color and enough information to calculate next step
+
+It must also terminate when no primitive is hit
+
+
+The overall tracing algorithm is a mapping: Ray -> Color
+To do this, it is set up with a number of mappings: Ray -> (Color * Ray list)
